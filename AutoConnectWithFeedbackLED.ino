@@ -32,7 +32,7 @@ void setup() {
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   // put your setup code here, to run once:
   Serial.begin(115200);
-  
+
   //set led pin as output
   pinMode(LED, OUTPUT);
   // start ticker with 0.5 because we start in AP mode and try to connect
@@ -42,7 +42,7 @@ void setup() {
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wm;
   //reset settings - for testing
-  // wm.resetSettings();
+  //wm.resetSettings();
 
   //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
   wm.setAPCallback(configModeCallback);

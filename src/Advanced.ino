@@ -7,7 +7,7 @@
 #include <Ticker.h>
 
 #define TRIGGER_PIN 0
-#define WM_NAME "OnTact_"
+#define WM_NAME "OnTact"
 #define WM_PASSWORD "password"
 #define LED_NO_SSID 0.2
 #define LED_IN_CONFIG 0.8
@@ -100,7 +100,7 @@ void setup() {
   // wm.setShowDnsFields(true);    // force show dns field always
 
   // wm.setConnectTimeout(20); // how long to try to connect for before continuing
-  wm.setConfigPortalTimeout(30); // auto close configportal after n seconds
+  wm.setConfigPortalTimeout(180); // auto close configportal after n seconds
   // wm.setCaptivePortalEnable(false); // disable captive portal redirection
   // wm.setAPClientCheck(true); // avoid timeout if client connected to softap
 
@@ -155,7 +155,7 @@ void checkButton(){
 
       // start portal w delay
       Serial.println("Starting config portal");
-      wm.setConfigPortalTimeout(120);
+      wm.setConfigPortalTimeout(180);
       // start ticker with 0.6 because we start ondemandAP mode
       ticker.attach(LED_IN_CONFIG, tick);
 

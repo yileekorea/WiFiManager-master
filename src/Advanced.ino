@@ -86,7 +86,8 @@ void setup() {
   // menu tokens, "wifi","wifinoscan","info","param","close","sep","erase","restart","exit" (sep is seperator) (if param is in menu, params will not show up in wifi page!)
   // const char* menu[] = {"wifi","info","param","sep","restart","exit"};
   // wm.setMenu(menu,6);
-  std::vector<const char *> menu = {"wifi","info","param","sep","restart","exit"};
+  //std::vector<const char *> menu = {"wifi","info","param","sep","restart","exit"};
+  std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
   wm.setMenu(menu);
 
   // set dark theme

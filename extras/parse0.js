@@ -4,8 +4,8 @@ const fs = require('fs');
 
 console.log('starting');
 
-const inFile = 'test.html';
-const outFile = 'test.h';
+const inFile = 'WiFiManager.kr_template.html';
+const outFile = 'kr_template.h';
 
 const defineRegEx = /<!-- ([A-Z_]+) -->/gm;
 console.log('parsing', inFile);

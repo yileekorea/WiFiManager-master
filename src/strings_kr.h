@@ -41,8 +41,8 @@ const char * const HTTP_PORTAL_MENU[] PROGMEM = {
 "<form action='/info'    method='get'><button>시스템 정보</button></form><br/>\n", // MENU_INFO
 "<form action='/param'   method='get'><button>추가 설정</button></form><br/>\n",//MENU_PARAM
 "<form action='/close'   method='get'><button>창 닫기</button></form><br/>\n", // MENU_CLOSE
-"<form action='/restart' method='get'><button>재시작</button></form><br/>\n",// MENU_RESTART
-"<form action='/exit'    method='get'><button>종료</button></form><br/>\n",  // MENU_EXIT
+"<form action='/restart' method='get'><button>시스템 재시작</button></form><br/>\n",// MENU_RESTART
+"<form action='/exit'    method='get'><button>나가기</button></form><br/>\n",  // MENU_EXIT
 "<form action='/erase'   method='get'><button class='D'>설정 초기화</button></form><br/>\n", // MENU_ERASE
 "<form action='/update'  method='get'><button>SW 업그레이드</button></form><br/>\n",// MENU_UPDATE
 "<hr><br/>" // MENU_SEP
@@ -72,7 +72,7 @@ const char HTTP_ERASEBTN[]         PROGMEM = "<br/><form action='/erase' method=
 const char HTTP_UPDATEBTN[]        PROGMEM = "<br/><form action='/update' method='get'><button>업데이트</button></form>";
 const char HTTP_BACKBTN[]          PROGMEM = "<hr><br/><form action='/' method='get'><button>이전</button></form>";
 
-const char HTTP_STATUS_ON[]        PROGMEM = "<div class='msg S'><strong>연결된 무선AP</strong> 는 {v}<br/><em><small>IP 정보: {i}</small></em></div>";
+const char HTTP_STATUS_ON[]        PROGMEM = "<div class='msg S'><strong>연결된 무선AP는 {v}</strong><br/><em><small>IP 정보: {i}</small></em></div>";
 const char HTTP_STATUS_OFF[]       PROGMEM = "<div class='msg {c}'><strong>연결 실패</strong> to {v}{r}</div>"; // {c=class} {v=ssid} {r=status_off}
 const char HTTP_STATUS_OFFPW[]     PROGMEM = "<br/>인증 오류 입니다"; // STATION_WRONG_PASSWORD,  no eps32
 const char HTTP_STATUS_OFFNOAP[]   PROGMEM = "<br/>발견된 무선AP가 없습니다";   // WL_NO_SSID_AVAIL
@@ -112,6 +112,7 @@ const char HTTP_STYLE[]            PROGMEM = "<style>"
 "input:disabled {opacity: 0.5;}"
 "</style>";
 
+#define WM_NOHELP
 #ifndef WM_NOHELP
 const char HTTP_HELP[]             PROGMEM =
  "<br/><h3>상세 페이지</h3><hr>"
@@ -168,6 +169,25 @@ const char HTTP_JS[] PROGMEM =
 #endif
 
 // Info html
+const char HTTP_INFO_wifihead[]   PROGMEM = "<h3>OnTact 무선 설정정보</h3><hr>";
+const char HTTP_INFO_uptime[]     PROGMEM = "<dt>Uptime</dt><dd>{1} Mins {2} Secs</dd>";
+const char HTTP_INFO_chipid[]     PROGMEM = "<dt>Chip ID</dt><dd>{1}</dd>";
+const char HTTP_INFO_idesize[]    PROGMEM = "<dt>Flash Size</dt><dd>{1} bytes</dd>";
+const char HTTP_INFO_sdkver[]     PROGMEM = "<dt>SDK Version</dt><dd>{1}</dd>";
+const char HTTP_INFO_cpufreq[]    PROGMEM = "<dt>CPU Frequency</dt><dd>{1}MHz</dd>";
+const char HTTP_INFO_apip[]       PROGMEM = "<dt>시스템 설정 접속 IP</dt><dd>{1}</dd>";
+const char HTTP_INFO_apmac[]      PROGMEM = "<dt>시스템 MAC</dt><dd>{1}</dd>";
+const char HTTP_INFO_apssid[]     PROGMEM = "<dt>무선AP SSID</dt><dd>{1}</dd>";
+const char HTTP_INFO_apbssid[]    PROGMEM = "<dt>무선AP 비공개SSID</dt><dd>{1}</dd>";
+const char HTTP_INFO_staip[]      PROGMEM = "<dt>무선AP 연결 IP</dt><dd>{1}</dd>";
+const char HTTP_INFO_stagw[]      PROGMEM = "<dt>무선AP 연결 Gateway</dt><dd>{1}</dd>";
+const char HTTP_INFO_stasub[]     PROGMEM = "<dt>무선AP 연결 Subnet</dt><dd>{1}</dd>";
+const char HTTP_INFO_dnss[]       PROGMEM = "<dt>무선AP 연결 DNS 정보</dt><dd>{1}</dd>";
+const char HTTP_INFO_host[]       PROGMEM = "<dt>호스트 이름</dt><dd>{1}</dd>";
+const char HTTP_INFO_stamac[]     PROGMEM = "<dt>OnTact 시스템 MAC</dt><dd>{1}</dd>";
+const char HTTP_INFO_conx[]       PROGMEM = "<dt>연결 상태?</dt><dd>{1}</dd>";
+const char HTTP_INFO_autoconx[]   PROGMEM = "<dt>자동 재연결 상태?t</dt><dd>{1}</dd>";
+
 #ifdef ESP32
 	const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp32</h3><hr><dl>";
 	const char HTTP_INFO_chiprev[]    PROGMEM = "<dt>Chip Rev</dt><dd>{1}</dd>";
@@ -176,7 +196,7 @@ const char HTTP_JS[] PROGMEM =
     const char HTTP_INFO_psrsize[]    PROGMEM = "<dt>PSRAM Size</dt><dd>{1} bytes</dd>";
 	const char HTTP_INFO_temp[]       PROGMEM = "<dt>Temperature</dt><dd>{1} C&deg; / {2} F&deg;</dd><dt>Hall</dt><dd>{3}</dd>";
 #else
-	const char HTTP_INFO_esphead[]    PROGMEM = "<h3>esp8266</h3><hr><dl>";
+	const char HTTP_INFO_esphead[]    PROGMEM = "<br/><h3>OnTact 시스템 정보</h3><hr><dl>";
 	const char HTTP_INFO_fchipid[]    PROGMEM = "<dt>Flash Chip ID</dt><dd>{1}</dd>";
 	const char HTTP_INFO_corever[]    PROGMEM = "<dt>Core Version</dt><dd>{1}</dd>";
 	const char HTTP_INFO_bootver[]    PROGMEM = "<dt>Boot Version</dt><dd>{1}</dd>";
@@ -185,26 +205,8 @@ const char HTTP_JS[] PROGMEM =
 #endif
 
 const char HTTP_INFO_memsmeter[]  PROGMEM = "<br/><progress value='{1}' max='{2}'></progress></dd>";
-const char HTTP_INFO_memsketch[]  PROGMEM = "<dt>Memory - Sketch Size</dt><dd>Used / Total bytes<br/>{1} / {2}";
+const char HTTP_INFO_memsketch[]  PROGMEM = "<dt>Memory - program Size</dt><dd>Used / Total bytes<br/>{1} / {2}";
 const char HTTP_INFO_freeheap[]   PROGMEM = "<dt>Memory - Free Heap</dt><dd>{1} bytes available</dd>";
-const char HTTP_INFO_wifihead[]   PROGMEM = "<br/><h3>WiFi</h3><hr>";
-const char HTTP_INFO_uptime[]     PROGMEM = "<dt>Uptime</dt><dd>{1} Mins {2} Secs</dd>";
-const char HTTP_INFO_chipid[]     PROGMEM = "<dt>Chip ID</dt><dd>{1}</dd>";
-const char HTTP_INFO_idesize[]    PROGMEM = "<dt>Flash Size</dt><dd>{1} bytes</dd>";
-const char HTTP_INFO_sdkver[]     PROGMEM = "<dt>SDK Version</dt><dd>{1}</dd>";
-const char HTTP_INFO_cpufreq[]    PROGMEM = "<dt>CPU Frequency</dt><dd>{1}MHz</dd>";
-const char HTTP_INFO_apip[]       PROGMEM = "<dt>Access Point IP</dt><dd>{1}</dd>";
-const char HTTP_INFO_apmac[]      PROGMEM = "<dt>Access Point MAC</dt><dd>{1}</dd>";
-const char HTTP_INFO_apssid[]     PROGMEM = "<dt>SSID</dt><dd>{1}</dd>";
-const char HTTP_INFO_apbssid[]    PROGMEM = "<dt>BSSID</dt><dd>{1}</dd>";
-const char HTTP_INFO_staip[]      PROGMEM = "<dt>Station IP</dt><dd>{1}</dd>";
-const char HTTP_INFO_stagw[]      PROGMEM = "<dt>Station Gateway</dt><dd>{1}</dd>";
-const char HTTP_INFO_stasub[]     PROGMEM = "<dt>Station Subnet</dt><dd>{1}</dd>";
-const char HTTP_INFO_dnss[]       PROGMEM = "<dt>DNS Server</dt><dd>{1}</dd>";
-const char HTTP_INFO_host[]       PROGMEM = "<dt>Hostname</dt><dd>{1}</dd>";
-const char HTTP_INFO_stamac[]     PROGMEM = "<dt>Station MAC</dt><dd>{1}</dd>";
-const char HTTP_INFO_conx[]       PROGMEM = "<dt>Connected</dt><dd>{1}</dd>";
-const char HTTP_INFO_autoconx[]   PROGMEM = "<dt>Autoconnect</dt><dd>{1}</dd>";
 
 // Strings
 const char S_y[]                  PROGMEM = "Yes";
@@ -225,14 +227,14 @@ const char S_titleexit[]          PROGMEM = "Exit";
 const char S_titlereset[]         PROGMEM = "Reset";
 const char S_titleerase[]         PROGMEM = "Erase";
 const char S_titleclose[]         PROGMEM = "Close";
-const char S_options[]            PROGMEM = "OnTact smart";
+const char S_options[]            PROGMEM = "OnTact 스마트 시스템";
 const char S_nonetworks[]         PROGMEM = "No networks found. Refresh to scan again.";
 const char S_staticip[]           PROGMEM = "Static IP";
 const char S_staticgw[]           PROGMEM = "Static Gateway";
 const char S_staticdns[]          PROGMEM = "Static DNS";
 const char S_subnet[]             PROGMEM = "Subnet";
-const char S_exiting[]            PROGMEM = "Exiting";
-const char S_resetting[]          PROGMEM = "Module will reset in a few seconds.";
+const char S_exiting[]            PROGMEM = "나가는중... 잠시후 창이 닫힘니다";
+const char S_resetting[]          PROGMEM = "잠시후... 시스템이 재시작 됩니다";
 const char S_closing[]            PROGMEM = "You can close the page, portal will continue to run";
 const char S_error[]              PROGMEM = "An Error Occured";
 const char S_notfound[]           PROGMEM = "File Not Found\n\n";

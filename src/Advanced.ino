@@ -87,7 +87,8 @@ void setup() {
   // const char* menu[] = {"wifi","info","param","sep","restart","exit"};
   // wm.setMenu(menu,6);
   //std::vector<const char *> menu = {"wifi","info","param","sep","restart","exit"};
-  std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
+  std::vector<const char *> menu = {"wifi","info","sep","exit","restart"};
+  //std::vector<const char *> menu = {"wifi","wifinoscan","info","param","close","sep","erase","update","restart","exit"};
   wm.setMenu(menu);
 
   // set dark theme

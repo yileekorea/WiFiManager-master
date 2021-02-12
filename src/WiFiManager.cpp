@@ -1787,6 +1787,21 @@ void WiFiManager::handleInfo() {
   #ifdef ESP8266
     infos = 27;
     String infoids[] = {
+      //wifi info
+      F("wifihead"),
+      F("apip"),
+      F("apmac"),
+      F("apssid"),
+      F("apbssid"),
+      F("staip"),
+      F("stagw"),
+      F("stasub"),
+      F("dnss"),
+      F("host"),
+      F("stamac"),
+      F("conx"),
+      F("autoconx"),
+      //system info
       F("esphead"),
       F("uptime"),
       F("chipid"),
@@ -1800,20 +1815,7 @@ void WiFiManager::handleInfo() {
       F("freeheap"),
       F("memsketch"),
       F("memsmeter"),
-      F("lastreset"),
-      F("wifihead"),
-      F("apip"),
-      F("apmac"),
-      F("apssid"),
-      F("apbssid"),
-      F("staip"),
-      F("stagw"),
-      F("stasub"),
-      F("dnss"),
-      F("host"),
-      F("stamac"),
-      F("conx"),
-      F("autoconx")
+      F("lastreset")
     };
 
   #elif defined(ESP32)
@@ -1854,7 +1856,7 @@ void WiFiManager::handleInfo() {
   }
   page += F("</dl>");
   if(_showInfoUpdate){
-    page += HTTP_PORTAL_MENU[8];
+//    page += HTTP_PORTAL_MENU[8];
     page += HTTP_PORTAL_MENU[9];
   }
   if(_showInfoErase) page += FPSTR(HTTP_ERASEBTN);
@@ -1874,8 +1876,84 @@ String WiFiManager::getInfoData(String id){
 
   String p;
   // @todo add WM versioning
-  if(id==F("esphead"))p = FPSTR(HTTP_INFO_esphead);
-  else if(id==F("wifihead"))p = FPSTR(HTTP_INFO_wifihead);
+  //if(id==F("esphead"))p = FPSTR(HTTP_INFO_esphead);
+  //else if(id==F("wifihead"))p = FPSTR(HTTP_INFO_wifihead);
+
+  if(id==F("wifihead"))p = FPSTR(HTTP_INFO_wifihead);
+  else if(id==F("esphead"))p = FPSTR(HTTP_INFO_esphead);
+
+  //wifi head start
+  else if(id==F("apip")){
+    p = FPSTR(HTTP_INFO_apip);
+    p.replace(FPSTR(T_1),WiFi.softAPIP().toString());
+  }
+  else if(id==F("apmac")){
+    p = FPSTR(HTTP_INFO_apmac);
+    p.replace(FPSTR(T_1),(String)WiFi.softAPmacAddress());
+  }
+  #ifdef ESP32
+  else if(id==F("aphost")){
+      p = FPSTR(HTTP_INFO_aphost);
+      p.replace(FPSTR(T_1),WiFi.softAPgetHostname());
+  }
+  #endif
+  else if(id==F("apssid")){
+    p = FPSTR(HTTP_INFO_apssid);
+    p.replace(FPSTR(T_1),htmlEntities((String)WiFi_SSID()));
+  }
+  else if(id==F("apbssid")){
+    p = FPSTR(HTTP_INFO_apbssid);
+    p.replace(FPSTR(T_1),(String)WiFi.BSSIDstr());
+  }
+  else if(id==F("staip")){
+    p = FPSTR(HTTP_INFO_staip);
+    p.replace(FPSTR(T_1),WiFi.localIP().toString());
+  }
+  else if(id==F("stagw")){
+    p = FPSTR(HTTP_INFO_stagw);
+    p.replace(FPSTR(T_1),WiFi.gatewayIP().toString());
+  }
+  else if(id==F("stasub")){
+    p = FPSTR(HTTP_INFO_stasub);
+    p.replace(FPSTR(T_1),WiFi.subnetMask().toString());
+  }
+  else if(id==F("dnss")){
+    p = FPSTR(HTTP_INFO_dnss);
+    p.replace(FPSTR(T_1),WiFi.dnsIP().toString());
+  }
+  else if(id==F("host")){
+    p = FPSTR(HTTP_INFO_host);
+    #ifdef ESP32
+      p.replace(FPSTR(T_1),WiFi.getHostname());
+    #else
+      p.replace(FPSTR(T_1),WiFi.hostname());
+    #endif
+  }
+  else if(id==F("stamac")){
+    p = FPSTR(HTTP_INFO_stamac);
+    p.replace(FPSTR(T_1),WiFi.macAddress());
+  }
+  else if(id==F("conx")){
+    p = FPSTR(HTTP_INFO_conx);
+    p.replace(FPSTR(T_1),WiFi.isConnected() ? FPSTR(S_y) : FPSTR(S_n));
+  }
+  #ifdef ESP8266
+  else if(id==F("autoconx")){
+    p = FPSTR(HTTP_INFO_autoconx);
+    p.replace(FPSTR(T_1),WiFi.getAutoConnect() ? FPSTR(S_enable) : FPSTR(S_disable));
+  }
+  #endif
+  #ifdef ESP32
+  else if(id==F("temp")){
+    // temperature is not calibrated, varying large offsets are present, use for relative temp changes only
+    p = FPSTR(HTTP_INFO_temp);
+    p.replace(FPSTR(T_1),(String)temperatureRead());
+    p.replace(FPSTR(T_2),(String)((temperatureRead()+32)*1.8));
+    p.replace(FPSTR(T_3),(String)hallRead());
+  }
+  #endif
+
+  //system info start
   else if(id==F("uptime")){
     // subject to rollover!
     p = FPSTR(HTTP_INFO_uptime);
@@ -1989,75 +2067,7 @@ String WiFiManager::getInfoData(String id){
       }
     #endif
   }
-  else if(id==F("apip")){
-    p = FPSTR(HTTP_INFO_apip);
-    p.replace(FPSTR(T_1),WiFi.softAPIP().toString());
-  }
-  else if(id==F("apmac")){
-    p = FPSTR(HTTP_INFO_apmac);
-    p.replace(FPSTR(T_1),(String)WiFi.softAPmacAddress());
-  }
-  #ifdef ESP32
-  else if(id==F("aphost")){
-      p = FPSTR(HTTP_INFO_aphost);
-      p.replace(FPSTR(T_1),WiFi.softAPgetHostname());
-  }
-  #endif
-  else if(id==F("apssid")){
-    p = FPSTR(HTTP_INFO_apssid);
-    p.replace(FPSTR(T_1),htmlEntities((String)WiFi_SSID()));
-  }
-  else if(id==F("apbssid")){
-    p = FPSTR(HTTP_INFO_apbssid);
-    p.replace(FPSTR(T_1),(String)WiFi.BSSIDstr());
-  }
-  else if(id==F("staip")){
-    p = FPSTR(HTTP_INFO_staip);
-    p.replace(FPSTR(T_1),WiFi.localIP().toString());
-  }
-  else if(id==F("stagw")){
-    p = FPSTR(HTTP_INFO_stagw);
-    p.replace(FPSTR(T_1),WiFi.gatewayIP().toString());
-  }
-  else if(id==F("stasub")){
-    p = FPSTR(HTTP_INFO_stasub);
-    p.replace(FPSTR(T_1),WiFi.subnetMask().toString());
-  }
-  else if(id==F("dnss")){
-    p = FPSTR(HTTP_INFO_dnss);
-    p.replace(FPSTR(T_1),WiFi.dnsIP().toString());
-  }
-  else if(id==F("host")){
-    p = FPSTR(HTTP_INFO_host);
-    #ifdef ESP32
-      p.replace(FPSTR(T_1),WiFi.getHostname());
-    #else
-    p.replace(FPSTR(T_1),WiFi.hostname());
-    #endif
-  }
-  else if(id==F("stamac")){
-    p = FPSTR(HTTP_INFO_stamac);
-    p.replace(FPSTR(T_1),WiFi.macAddress());
-  }
-  else if(id==F("conx")){
-    p = FPSTR(HTTP_INFO_conx);
-    p.replace(FPSTR(T_1),WiFi.isConnected() ? FPSTR(S_y) : FPSTR(S_n));
-  }
-  #ifdef ESP8266
-  else if(id==F("autoconx")){
-    p = FPSTR(HTTP_INFO_autoconx);
-    p.replace(FPSTR(T_1),WiFi.getAutoConnect() ? FPSTR(S_enable) : FPSTR(S_disable));
-  }
-  #endif
-  #ifdef ESP32
-  else if(id==F("temp")){
-    // temperature is not calibrated, varying large offsets are present, use for relative temp changes only
-    p = FPSTR(HTTP_INFO_temp);
-    p.replace(FPSTR(T_1),(String)temperatureRead());
-    p.replace(FPSTR(T_2),(String)((temperatureRead()+32)*1.8));
-    p.replace(FPSTR(T_3),(String)hallRead());
-  }
-  #endif
+
   return p;
 }
 
